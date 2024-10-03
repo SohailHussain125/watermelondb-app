@@ -23,6 +23,7 @@ const AuthPage = () => {
         }
     }, [userId])
 
+
     const handleAuth = async () => {
         if (isLogin) {
             // Login logic

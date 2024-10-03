@@ -19,14 +19,18 @@ import { findCompanyByID } from './../database/helpers'
 import withObservables from '@nozbe/with-observables'
 import { observeCompany } from './../database/helpers'
 import {switchMap} from 'rxjs';
+import { useObservable } from 'rxjs-hooks';
 
 const CarPage = () => {
-    const [cars, setCars] = useState([]);
+    // const [cars, setCars] = useState([]);
     const [open, setOpen] = useState(false);
     const [currentCar, setCurrentCar] = useState(null);
     const [company, setCompany] = useState(null);
     const { id } = useParams();
 
+    const cars = useObservable(() => observeCompany(id).pipe(
+        switchMap(company => company[0]?.car.observe())
+    ), []);
 
     useEffect(() => {
         if (id) {
@@ -40,10 +44,10 @@ const CarPage = () => {
 
         // console.log("**", company)
         // console.log(company)
-        const cars = await company.car.fetch();
-        // console.log(cars, 'cars');
+        // const cars = await company.car.fetch();
+        // // console.log(cars, 'cars');
 
-        setCars(cars)
+        // setCars(cars)
 
     }
 
@@ -110,12 +114,10 @@ const CarPage = () => {
     );
 };
 // const enhance = withObservables( [],() =>  ({ 
-
-//     cars: observeCompany('5e3925ec-5c01-4904-81ad-17252b279b8a').pipe(switchMap(cp => cp[0]?.car?cp[0].car.observe():[]))
-//     // customer: (orderNumber ? observeGetOrderById(orderNumber) : observeActiveOrder()).pipe(switchMap(order => order[0].customer.observe())),
+//     cars: observeCompany('de40d5e2-d77b-4812-81aa-f56eb9be35a2').pipe(switchMap(cp =>cp[0]?.car.observe()))
 
 // }))
 // export default enhance(CarPage)
 
-export default CarPage
 
+export default CarPage;

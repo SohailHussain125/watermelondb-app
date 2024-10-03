@@ -17,7 +17,7 @@ const logoutFunc = ()=>{
     navigate();
 }
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1 ,marginBottom:5}}>
             <AppBar position="static">
                 <Toolbar>
                     <IconButton
