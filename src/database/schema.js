@@ -12,7 +12,7 @@ export const mySchema =  appSchema({
         name: USER_SCEHMA,
         columns: [
             {name: 'name', type: 'string'},
-            {name: 'email', type: 'string'},
+            {name: 'email', type: 'string',isUnique: true },
             {name: 'password', type: 'string'}
         ],
     }),
@@ -26,11 +26,11 @@ export const mySchema =  appSchema({
     tableSchema({
         name: CAR_SCHEMA,
         columns: [
-            {name: 'company_id', type: 'string'},
             {name: 'name', type: 'string'},
             {name: 'model', type: 'string'},
             {name: 'color', type: 'string'},
             {name: 'variant', type: 'string'},
+            {name: 'company_id', type: 'string'},
 
         ],
     }),
