@@ -31,7 +31,7 @@ const AuthPage = () => {
         setPassword('')
     }
 const displaySnakeBar=(message,variant)=>{
-    enqueueSnackbar(message, { variant });
+    enqueueSnackbar(message, { variant ,autoHideDuration: 1000});
 }
     const handleAuth = async () => {
         if (isLogin) {
