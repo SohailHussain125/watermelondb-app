@@ -6,6 +6,7 @@ import { Q } from '@nozbe/watermelondb';
 import User from './../database/models/user'; // Ensure this path is correct
 import { useAuth } from './../context/AuthContext'; // Import the Auth context
 import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 const AuthPage = () => {
     const [name, setName] = useState('');
@@ -14,6 +15,7 @@ const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
     const { login, handleLoginInDB, userId } = useAuth();
     const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
 
 
     useEffect(() => {
@@ -23,7 +25,14 @@ const AuthPage = () => {
         }
     }, [userId])
 
-
+    const resetField = () => {
+        setEmail('')
+        setName('')
+        setPassword('')
+    }
+const displaySnakeBar=(message,variant)=>{
+    enqueueSnackbar(message, { variant });
+}
     const handleAuth = async () => {
         if (isLogin) {
             // Login logic
@@ -32,15 +41,17 @@ const AuthPage = () => {
                 handleLoginInDB(user[0]._raw.id)
                 login(user[0]._raw.id);
                 navigate('/companies');
-                console.log('Login successful');
+                displaySnakeBar('Login successful','success');
             } else {
                 console.log('Invalid credentials');
+                displaySnakeBar('Invalid credentials','error');
             }
         } else {
             // Signup logic
             const existingUser = await database.collections.get(USER_SCEHMA).query(Q.where('email', email)).fetch();
             if (existingUser.length) {
                 console.log('Email already exists');
+                displaySnakeBar('Email already exists','error');
             } else {
                 await database.write(async () => {
                     await database.collections.get(USER_SCEHMA).create(user => {
@@ -52,6 +63,8 @@ const AuthPage = () => {
                         user.password = userData.password;
                     });
                 });
+                resetField();
+                displaySnakeBar('Signup successful','success')
                 console.log('Signup successful');
             }
         }
@@ -72,7 +85,7 @@ const AuthPage = () => {
             <Button variant="contained" color="primary" onClick={handleAuth}>
                 {isLogin ? 'Login' : 'Signup'}
             </Button>
-            <Button onClick={() => setIsLogin(!isLogin)}>
+            <Button onClick={() => { setIsLogin(!isLogin); resetField(); }}>
                 {isLogin ? 'Switch to Signup' : 'Switch to Login'}
             </Button>
         </Paper>
